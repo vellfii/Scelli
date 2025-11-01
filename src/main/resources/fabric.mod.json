@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "scelli",
+  "version": "${version}",
+  "name": "Scelli",
+  "description": "A custom screens library for my other mods.",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/scelli/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "net.velli.scelli.Scelli"
+    ]
+  },
+  "mixins": [
+    "scelli.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
