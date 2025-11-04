@@ -9,8 +9,12 @@ import java.util.List;
 
 public class BasicContainer<T extends BasicContainer<T>>
         extends Widget<BasicContainer<T>>
-        implements WidgetContainer {
+        implements WidgetContainer<T> {
     protected List<Widget<?>> widgets = new ArrayList<>();
+
+    public static BasicContainer<?> create() {
+        return new BasicContainer<>();
+    }
 
     @Override
     protected void render(DrawContext context, float mouseX, float mouseY, float delta) {
@@ -18,21 +22,26 @@ public class BasicContainer<T extends BasicContainer<T>>
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public T withPosition(float x, float y, boolean snap) {
-        super.withPosition(x, y, snap);
-        return (T) getThis();
+    public void hover(float mouseX, float mouseY, boolean active) {
+        super.hover(mouseX, mouseY, active);
+        this.hoverWidgets(mouseX, mouseY, active);
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public T withDimensions(int width, int height, boolean snap) {
-        super.withDimensions(width, height, snap);
-        return (T) getThis();
+    public T withPosition(float x, float y, boolean snap) {
+        super.withPosition(x, y, snap);
+        return getThis();
     }
 
-    public BasicContainer<T> getThis() {
-        return this;
+    @Override
+    public T withDimensions(int width, int height, boolean snap) {
+        super.withDimensions(width, height, snap);
+        return getThis();
+    }
+
+    @SuppressWarnings("unchecked")
+    public T getThis() {
+        return (T) this;
     }
 
     @Override
@@ -42,25 +51,5 @@ public class BasicContainer<T extends BasicContainer<T>>
 
     public void BCTestMethod() {
 
-    }
-
-    @Override
-    public void onClick(float mouseX, float mouseY, boolean active) {
-        getWidgets().forEach(widget -> {
-            if (widget instanceof ClickableWidget cw) {
-                boolean hovered = widget.isHovered(mouseX, mouseY) && active;
-                cw.onClick(mouseX, mouseY, hovered);
-            }
-        });
-    }
-
-    @Override
-    public void onRelease(float mouseX, float mouseY, boolean active) {
-        getWidgets().forEach(widget -> {
-            if (widget instanceof ClickableWidget cw) {
-                boolean hovered = widget.isHovered(mouseX, mouseY) && active;
-                cw.onRelease(mouseX, mouseY, hovered);
-            }
-        });
     }
 }
