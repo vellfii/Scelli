@@ -13,9 +13,9 @@ public class FolderWidget extends BasicContainer<FolderWidget> {
     }
 
     @Override
-    protected void render(DrawContext context, float mouseX, float mouseY, float delta) {
+    protected void render(DrawContext context, float mouseX, float mouseY, int opacity, float delta) {
         //System.out.println("we made it to the start of the render method");
-        context.fill(0, 0, Math.round(renderedWidth()), Math.round(renderedHeight()), 0x66000000);
+        context.fill(0, 0, Math.round(renderedWidth()), Math.round(renderedHeight()), (0xFF000000 & 0x00FFFFFF) | (Math.round(102f / 255 * opacity) << 24));
         AtomicInteger currentHeight = new AtomicInteger(verticalPadding);
         getWidgets().forEach(widget -> {
             currentHeight.set(currentHeight.get() + widget.height() + itemPadding);
@@ -27,7 +27,7 @@ public class FolderWidget extends BasicContainer<FolderWidget> {
             widget.position().width = width() - horizontalPadding * 2;
             widget.position().renderWidth = width() - horizontalPadding * 2;
         });
-        renderWidgets(context, mouseX, mouseY);
+        renderWidgets(context, mouseX, mouseY, opacity);
     }
 
     @Override

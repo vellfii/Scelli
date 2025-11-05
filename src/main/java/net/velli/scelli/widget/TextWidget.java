@@ -23,7 +23,7 @@ public class TextWidget extends Widget<TextWidget> {
     }
 
     @Override
-    protected void render(DrawContext context, float mouseX, float mouseY, float delta) {
+    protected void render(DrawContext context, float mouseX, float mouseY, int opacity, float delta) {
         TextRenderer textRenderer = Scelli.MC.textRenderer;
         AtomicInteger textY = new AtomicInteger(0);
         text.forEach(line -> {
@@ -31,7 +31,7 @@ public class TextWidget extends Widget<TextWidget> {
                 int textX = 0;
                 if (textAlignment == TextAlignment.CENTER) textX = Math.round(renderedWidth() / 2) - textRenderer.getWidth(wrappedLine) / 2;
                 if (textAlignment == TextAlignment.RIGHT) textX = Math.round(renderedWidth() - textRenderer.getWidth(wrappedLine));
-                context.drawText(textRenderer, wrappedLine, textX, textY.get(), 0xFFFFFFFF, true);
+                context.drawText(textRenderer, wrappedLine, textX, textY.get(), stackOpacity(0xFFFFFFFF, opacity), true);
                 textY.getAndAdd(textRenderer.fontHeight + padding);
             });
         });

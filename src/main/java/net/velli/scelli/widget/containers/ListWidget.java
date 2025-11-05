@@ -35,8 +35,8 @@ public class ListWidget extends BasicContainer<ListWidget> implements Scrollable
     }
 
     @Override
-    protected void render(DrawContext context, float mouseX, float mouseY, float delta) {
-        context.fill(0, 0, Math.round(renderedWidth()), Math.round(renderedHeight()), 0x33000000);
+    protected void render(DrawContext context, float mouseX, float mouseY, int opacity, float delta) {
+        context.fill(0, 0, Math.round(renderedWidth()), Math.round(renderedHeight()), stackOpacity(0x33000000, opacity));
         AtomicInteger currentHeight = new AtomicInteger(verticalPadding);
         getWidgets().forEach(widget -> {
             widget.position().alignment = WidgetPos.Alignment.TOPLEFT;
@@ -48,16 +48,16 @@ public class ListWidget extends BasicContainer<ListWidget> implements Scrollable
             widget.position().renderWidth = renderedWidth() - horizontalPadding * 2;
             currentHeight.getAndAdd(Math.round(widget.renderedHeight()) + itemPadding);
         });
-        renderWidgets(context, mouseX, mouseY);
+        renderWidgets(context, mouseX, mouseY, opacity);
         currentHeight.getAndAdd(-itemPadding);
         maxScrollAmount = currentHeight.get() + verticalPadding - Math.round(renderedHeight());
-        if (maxScrollAmount > 0) renderScrollbar(context, mouseX, mouseY, delta);
+        if (maxScrollAmount > 0) renderScrollbar(context, mouseX, mouseY, opacity, delta);
         renderScrollAmount = ScelliUtil.lerp(renderScrollAmount, scrollAmount, 16f * delta);
     }
 
-    protected void renderScrollbar(DrawContext context, float mouseX, float mouseY, float delta) {
+    protected void renderScrollbar(DrawContext context, float mouseX, float mouseY, int opacity, float delta) {
         if (holdingBar) setScrollAmount(scrollAnchor + (mouseY - mouseAnchor) / scaleFactor);
-        context.fill(Math.round(renderedWidth() - 4), 0, Math.round(renderedWidth()), Math.round(renderedHeight()), 0x66000000);
+        context.fill(Math.round(renderedWidth() - 4), 0, Math.round(renderedWidth()), Math.round(renderedHeight()), stackOpacity(0x66000000, opacity));
         scaleFactor = renderedHeight() / (renderedHeight() + maxScrollAmount);
         barHeight = Math.round(renderedHeight() * scaleFactor);
         context.fill(
@@ -65,7 +65,7 @@ public class ListWidget extends BasicContainer<ListWidget> implements Scrollable
                 Math.round(renderScrollAmount * scaleFactor),
                 Math.round(renderedWidth()),
                 Math.round(renderScrollAmount * scaleFactor) + barHeight,
-                0xDDEEFFFF
+                stackOpacity(0xDDEEFFFF, opacity)
         );
     }
 

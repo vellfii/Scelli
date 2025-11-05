@@ -7,17 +7,19 @@ public abstract class Widget<T extends Widget<T>> {
     protected final WidgetPos position = new WidgetPos();
 
     private long lastRender = System.currentTimeMillis();
-    protected abstract void render(DrawContext context, float mouseX, float mouseY, float delta);
+    protected abstract void render(DrawContext context, float mouseX, float mouseY, int opacity, float delta);
     public void hover(float mouseX, float mouseY, boolean active) {
         this.position.hovered = isHovered(mouseX, mouseY) && active;
     }
-    public void render(DrawContext context, float mouseX, float mouseY) {
+    public void render(DrawContext context, float mouseX, float mouseY, int opacity) {
         float delta = (float) (System.currentTimeMillis() - lastRender) / 1000;
-        render(context, mouseX, mouseY, delta);
+        opacity = Math.round(position.renderOpacity / 255 * opacity);
+        render(context, mouseX, mouseY, opacity, delta);
         position.renderX = ScelliUtil.lerp(renderedX(), x(), 16f * delta);
         position.renderY = ScelliUtil.lerp(renderedY(), y(), 16f * delta);
         position.renderWidth = ScelliUtil.lerp(renderedWidth(), width(), 16f * delta);
         position.renderHeight = ScelliUtil.lerp(renderedHeight(), height(), 16f * delta);
+        position.renderOpacity = ScelliUtil.lerp(renderedOpacity(), opacity(), 16f * delta);
         lastRender = System.currentTimeMillis();
     }
 
@@ -30,6 +32,8 @@ public abstract class Widget<T extends Widget<T>> {
     public int height() { return position.height; }
     public float renderedWidth() { return position.renderWidth; }
     public float renderedHeight() { return position.renderHeight; }
+    public int opacity() { return position.opacity; }
+    public float renderedOpacity() { return position.renderOpacity; }
     public boolean hovered() { return position.hovered; }
     public WidgetPos.Alignment alignment() { return position.alignment; }
 
@@ -55,6 +59,12 @@ public abstract class Widget<T extends Widget<T>> {
         return getThis();
     }
 
+    public T withOpacity(int opacity, boolean snap) {
+        this.position.opacity = Math.clamp(opacity, 0, 255);
+        if (snap) this.position.renderOpacity = Math.clamp(opacity, 0, 255);
+        return getThis();
+    }
+
     public T withAlignment(WidgetPos.Alignment alignment) {
         this.position.alignment = alignment;
         return getThis();
@@ -64,5 +74,9 @@ public abstract class Widget<T extends Widget<T>> {
         boolean inBoundsX = mouseX >= 0 && mouseX < renderedWidth();
         boolean inBoundsY = mouseY >= 0 && mouseY < renderedHeight();
         return inBoundsX && inBoundsY;
+    }
+
+    public static int stackOpacity(int color, int opacity) {
+        return (color & 0x00FFFFFF) | (Math.round((float) ((color >> 24) & 0xFF) / 255 * opacity) << 24);
     }
 }

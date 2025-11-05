@@ -17,8 +17,8 @@ public class BasicContainer<T extends BasicContainer<T>>
     }
 
     @Override
-    protected void render(DrawContext context, float mouseX, float mouseY, float delta) {
-        this.renderWidgets(context, mouseX, mouseY);
+    protected void render(DrawContext context, float mouseX, float mouseY, int opacity, float delta) {
+        this.renderWidgets(context, mouseX, mouseY, Math.round((float) opacity() / 255 * opacity));
     }
 
     @Override
@@ -39,9 +39,20 @@ public class BasicContainer<T extends BasicContainer<T>>
         return getThis();
     }
 
+    @Override
+    public BasicContainer<T> withOpacity(int opacity, boolean snap) {
+        super.withOpacity(opacity, snap);
+        return getThis();
+    }
+
     @SuppressWarnings("unchecked")
     public T getThis() {
         return (T) this;
+    }
+
+    @Override
+    public int opacity() {
+        return position.opacity;
     }
 
     @Override

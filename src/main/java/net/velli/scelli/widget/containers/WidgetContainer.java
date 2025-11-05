@@ -2,6 +2,7 @@ package net.velli.scelli.widget.containers;
 
 import net.minecraft.client.gui.DrawContext;
 import net.velli.scelli.widget.Widget;
+import net.velli.scelli.widget.WidgetPos;
 import net.velli.scelli.widget.interfaces.ClickableWidget;
 import net.velli.scelli.widget.interfaces.ScrollableWidget;
 import org.joml.Vector2f;
@@ -18,6 +19,8 @@ public interface WidgetContainer<T extends WidgetContainer<T>> extends Clickable
     float renderedWidth();
     int height();
     float renderedHeight();
+    int opacity();
+    float renderedOpacity();
 
     List<Widget<?>> getWidgets();
     default T addWidget(Widget<?> widget) { getWidgets().add(widget); return getThis(); }
@@ -33,14 +36,17 @@ public interface WidgetContainer<T extends WidgetContainer<T>> extends Clickable
     default void clearWidgets() { getWidgets().clear(); }
     T getThis();
 
-    default void renderWidgets(DrawContext context, float mouseX, float mouseY) {
+    default void renderWidgets(DrawContext context, float mouseX, float mouseY, int opacity) {
         getWidgets().forEach(widget -> {
             context.getMatrices().pushMatrix();
             Vector2f alignmentOffsets = widget.position().alignmentOffsets(this);
             context.getMatrices().translate(Math.round(alignmentOffsets.x), Math.round(alignmentOffsets.y));
             context.getMatrices().translate(Math.round(widget.renderedX()), Math.round(widget.renderedY()));
             context.enableScissor(0, 0, Math.round(widget.renderedWidth()), Math.round(widget.renderedHeight()));
-            widget.render(context, mouseX - widget.renderedX() - alignmentOffsets.x, mouseY - widget.renderedY() - alignmentOffsets.y);
+            widget.render(context,
+                    mouseX - widget.renderedX() - alignmentOffsets.x,
+                    mouseY - widget.renderedY() - alignmentOffsets.y,
+                    Math.round((float) opacity / 255 * renderedOpacity()));
             context.disableScissor();
             context.getMatrices().popMatrix();
         });

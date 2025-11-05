@@ -4,6 +4,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 import net.velli.scelli.widget.Widget;
+import net.velli.scelli.widget.WidgetPos;
 import net.velli.scelli.widget.containers.WidgetContainer;
 
 import java.util.ArrayList;
@@ -57,6 +58,16 @@ public class WidgetContainerScreen extends Screen implements WidgetContainer<Wid
     }
 
     @Override
+    public int opacity() {
+        return 255;
+    }
+
+    @Override
+    public float renderedOpacity() {
+        return 255;
+    }
+
+    @Override
     public List<Widget<?>> getWidgets() {
         return widgets;
     }
@@ -69,7 +80,7 @@ public class WidgetContainerScreen extends Screen implements WidgetContainer<Wid
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
         super.render(context, mouseX, mouseY, deltaTicks);
-        renderWidgets(context, mouseX, mouseY);
+        renderWidgets(context, mouseX, mouseY, opacity());
         hoverWidgets(mouseX, mouseY, true);
     }
 

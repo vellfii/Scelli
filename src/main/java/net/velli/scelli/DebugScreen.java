@@ -24,11 +24,13 @@ public class DebugScreen extends WidgetContainerScreen {
                     )
                     .withDimensions(0, 250, true)
             )
-            .withPosition(0, 500, true)
+            //.withPosition(0, 500, true)
             .withPosition(0, 0, false)
             .withPadding(5, 20, 2)
             .withDimensions(300, 150, true)
             .withAlignment(WidgetPos.Alignment.CENTER)
+            .withOpacity(0, true)
+            .withOpacity(255, false)
         );
     }
 }
