@@ -50,7 +50,9 @@ public class ListWidget extends BasicContainer<ListWidget> implements Scrollable
         });
         renderWidgets(context, mouseX, mouseY, opacity);
         currentHeight.getAndAdd(-itemPadding);
-        maxScrollAmount = currentHeight.get() + verticalPadding - Math.round(renderedHeight());
+        maxScrollAmount = Math.clamp(currentHeight.get() + verticalPadding - Math.round(renderedHeight()), 0, 999999999);
+        scrollAmount = Math.clamp(scrollAmount, 0, maxScrollAmount);
+        renderScrollAmount = Math.clamp(renderScrollAmount, 0, maxScrollAmount);
         if (maxScrollAmount > 0) renderScrollbar(context, mouseX, mouseY, opacity, delta);
         renderScrollAmount = ScelliUtil.lerp(renderScrollAmount, scrollAmount, 16f * delta);
     }

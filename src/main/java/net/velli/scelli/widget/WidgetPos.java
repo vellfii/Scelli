@@ -21,6 +21,7 @@ public class WidgetPos {
     public boolean hovered = false;
     public int opacity = 255;
     public float renderOpacity = 255;
+    public float animationSpeed = 1;
 
     public Vector2f alignmentOffsets(WidgetContainer<?> renderer) {
         Vector2f result = new Vector2f(0, 0);

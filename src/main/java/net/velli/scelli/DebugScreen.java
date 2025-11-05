@@ -6,6 +6,7 @@ import net.velli.scelli.screen.WidgetContainerScreen;
 import net.velli.scelli.widget.ButtonWidget;
 import net.velli.scelli.widget.TextWidget;
 import net.velli.scelli.widget.WidgetPos;
+import net.velli.scelli.widget.containers.FolderWidget;
 import net.velli.scelli.widget.containers.ListWidget;
 
 public class DebugScreen extends WidgetContainerScreen {
@@ -13,7 +14,7 @@ public class DebugScreen extends WidgetContainerScreen {
         super(previousScreen);
         addWidgets(
             ListWidget.create().addWidgets(
-                    ListWidget.create().addWidgets(
+                    FolderWidget.create(false).addWidgets(
                             ButtonWidget.create().withDimensions(0, 50, true).withText(Text.literal("this is a\ntest of the text!")),
                             ListWidget.create().addWidgets(
                                     ButtonWidget.create().withDimensions(0, 10, true),
@@ -22,9 +23,8 @@ public class DebugScreen extends WidgetContainerScreen {
                             )
                             .withDimensions(0, 100, true)
                     )
-                    .withDimensions(0, 250, true)
             )
-            //.withPosition(0, 500, true)
+            .withAnimationSpeed(0.5f)
             .withPosition(0, 0, false)
             .withPadding(5, 20, 2)
             .withDimensions(300, 150, true)

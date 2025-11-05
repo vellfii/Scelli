@@ -15,11 +15,12 @@ public abstract class Widget<T extends Widget<T>> {
         float delta = (float) (System.currentTimeMillis() - lastRender) / 1000;
         opacity = Math.round(position.renderOpacity / 255 * opacity);
         render(context, mouseX, mouseY, opacity, delta);
-        position.renderX = ScelliUtil.lerp(renderedX(), x(), 16f * delta);
-        position.renderY = ScelliUtil.lerp(renderedY(), y(), 16f * delta);
-        position.renderWidth = ScelliUtil.lerp(renderedWidth(), width(), 16f * delta);
-        position.renderHeight = ScelliUtil.lerp(renderedHeight(), height(), 16f * delta);
-        position.renderOpacity = ScelliUtil.lerp(renderedOpacity(), opacity(), 16f * delta);
+        float t = 16f * delta * animationSpeed();
+        position.renderX = ScelliUtil.lerp(renderedX(), x(), t);
+        position.renderY = ScelliUtil.lerp(renderedY(), y(), t);
+        position.renderWidth = ScelliUtil.lerp(renderedWidth(), width(), t);
+        position.renderHeight = ScelliUtil.lerp(renderedHeight(), height(), t);
+        position.renderOpacity = ScelliUtil.lerp(renderedOpacity(), opacity(), t);
         lastRender = System.currentTimeMillis();
     }
 
@@ -35,6 +36,7 @@ public abstract class Widget<T extends Widget<T>> {
     public int opacity() { return position.opacity; }
     public float renderedOpacity() { return position.renderOpacity; }
     public boolean hovered() { return position.hovered; }
+    public float animationSpeed() { return position.animationSpeed; }
     public WidgetPos.Alignment alignment() { return position.alignment; }
 
     public abstract T getThis();
@@ -67,6 +69,11 @@ public abstract class Widget<T extends Widget<T>> {
 
     public T withAlignment(WidgetPos.Alignment alignment) {
         this.position.alignment = alignment;
+        return getThis();
+    }
+
+    public T withAnimationSpeed(float speed) {
+        this.position.animationSpeed = Math.clamp(speed, 0, 2);
         return getThis();
     }
 
