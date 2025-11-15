@@ -2,7 +2,6 @@ package net.velli.scelli.widget.containers;
 
 import net.minecraft.client.gui.DrawContext;
 import net.velli.scelli.widget.Widget;
-import net.velli.scelli.widget.interfaces.ClickableWidget;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,9 +57,5 @@ public class BasicContainer<T extends BasicContainer<T>>
     @Override
     public List<Widget<?>> getWidgets() {
         return widgets;
-    }
-
-    public void BCTestMethod() {
-
     }
 }

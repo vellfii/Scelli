@@ -73,7 +73,7 @@ public abstract class Widget<T extends Widget<T>> {
     }
 
     public T withAnimationSpeed(float speed) {
-        this.position.animationSpeed = Math.clamp(speed, 0, 2);
+        this.position.animationSpeed = Math.clamp(speed, 0, 100);
         return getThis();
     }
 

@@ -2,15 +2,15 @@ package net.velli.scelli.widget.containers;
 
 import net.minecraft.client.gui.DrawContext;
 import net.velli.scelli.widget.Widget;
-import net.velli.scelli.widget.WidgetPos;
 import net.velli.scelli.widget.interfaces.ClickableWidget;
 import net.velli.scelli.widget.interfaces.ScrollableWidget;
+import net.velli.scelli.widget.interfaces.TypableWidget;
 import org.joml.Vector2f;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public interface WidgetContainer<T extends WidgetContainer<T>> extends ClickableWidget, ScrollableWidget {
+public interface WidgetContainer<T extends WidgetContainer<T>> extends ClickableWidget, ScrollableWidget, TypableWidget {
     float x();
     float renderedX();
     float y();
@@ -98,6 +98,22 @@ public interface WidgetContainer<T extends WidgetContainer<T>> extends Clickable
                 cw.onRelease(mouseX - widget.x() - alignmentOffsets.x,
                         mouseY - widget.y() - alignmentOffsets.y,
                         hovered);
+            }
+        });
+    }
+
+    default void onType(char chr) {
+        getWidgets().forEach(widget -> {
+            if (widget instanceof TypableWidget tw) {
+                tw.onType(chr);
+            }
+        });
+    }
+
+    default void onKeyPressed(int keyCode, int modifiers) {
+        getWidgets().forEach(widget -> {
+            if (widget instanceof TypableWidget tw) {
+                tw.onKeyPressed(keyCode, modifiers);
             }
         });
     }

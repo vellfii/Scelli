@@ -4,7 +4,6 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 import net.velli.scelli.widget.Widget;
-import net.velli.scelli.widget.WidgetPos;
 import net.velli.scelli.widget.containers.WidgetContainer;
 
 import java.util.ArrayList;
@@ -100,5 +99,17 @@ public class WidgetContainerScreen extends Screen implements WidgetContainer<Wid
     public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
         onScroll(verticalAmount * 15);
         return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
+    }
+
+    @Override
+    public boolean charTyped(char chr, int modifiers) {
+        onType(chr);
+        return super.charTyped(chr, modifiers);
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        onKeyPressed(keyCode, modifiers);
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 }

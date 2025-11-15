@@ -56,6 +56,11 @@ public class ButtonWidget extends Widget<ButtonWidget> implements ClickableWidge
         return this;
     }
 
+    @Override
+    public void onRelease(float mouseX, float mouseY, boolean active) {
+        releaseProcessor.onRelease(this, mouseX, mouseY, active);
+    }
+
     public ButtonWidget withText(List<Text> text) {
         this.text.clear();
         text.forEach(line -> {
@@ -67,10 +72,5 @@ public class ButtonWidget extends Widget<ButtonWidget> implements ClickableWidge
 
     public ButtonWidget withText(Text text) {
         return withText(List.of(text));
-    }
-
-    @Override
-    public void onRelease(float mouseX, float mouseY, boolean active) {
-        releaseProcessor.onRelease(this, mouseX, mouseY, active);
     }
 }
