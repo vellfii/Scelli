@@ -12,28 +12,28 @@ public class DebugScreen extends WidgetContainerScreen {
     protected DebugScreen(Screen previousScreen) {
         super(previousScreen);
         addWidgets(
-            ListWidget.create().addWidgets(
-                    ListWidget.create().addWidgets(
-                            ButtonWidget.create().withDimensions(0, 50, true).withText(Text.literal("this is a\ntest of the text!")),
-                            StringInputWidget.create(),
-                            NumInputWidget.create(),
-                            SliderWidget.create().withThresholds(-50, 50),
-                            ListWidget.create().addWidgets(
-                                    ButtonWidget.create().withDimensions(0, 10, true),
-                                    TextWidget.create().withText(Text.literal("this is a\ntest of the\ntext widget! also im going to make this suuuper long to see if it's possible for me to wrap the lines and such teehee"))
-                                    .withPadding(0)
-                            )
-                            .withDimensions(0, 100, true)
-                    )
-                    .withAnimationSpeed(100f)
-                    .withDimensions(0, 200, true)
-            )
-            .withAnimationSpeed(1f)
-            .withPosition(0, 500, true)
-            .withPosition(0, 0, false)
-            .withPadding(5, 20, 2)
-            .withDimensions(300, 150, true)
-            .withAlignment(WidgetPos.Alignment.CENTER)
+                ListWidget.create()
+                        .addWidgets(
+                                TextWidget.create().withText(Text.literal("hey im a text widget")).withAlignment(TextWidget.TextAlignment.CENTER),
+                                ButtonWidget.create().withText(Text.literal("button :3")).withDimensions(0, 50, true),
+                                SliderWidget.create().withThresholds(-10, 10),
+                                FolderWidget.create(false).withTitle(Text.literal("folder widget title! wow!"))
+                        )
+                        .withAlignment(WidgetPos.Alignment.CENTER)
+                        .withDimensions(200, 150, true),
+                ListWidget.create()
+                        .addWidgets(
+                                TextWidget.create().withText(Text.literal("im text but on the right!")).withAlignment(TextWidget.TextAlignment.CENTER),
+                                ButtonWidget.create().withText(Text.literal("button but right hehe :3")).withDimensions(0, 20, true)
+                        )
+                        .withAlignment(WidgetPos.Alignment.RIGHT)
+                        .withDimensions(150, 55, true),
+                ListWidget.create()
+                        .addWidgets(
+                                TextWidget.create().withText(Text.literal("some kinda title text up here maybe"))
+                        )
+                        .withAlignment(WidgetPos.Alignment.TOP)
+                        .withDimensions(200, 30, true)
         );
     }
 }

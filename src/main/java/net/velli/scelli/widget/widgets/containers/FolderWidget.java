@@ -24,7 +24,7 @@ public class FolderWidget extends BasicContainer<FolderWidget> {
     protected TextWidget title = TextWidget.create()
             .withAlignment(TextWidget.TextAlignment.CENTER)
             .withPosition(0, 6, true)
-            .withText(Text.literal("example title"));
+            .withText(Text.literal(""));
 
     public static FolderWidget create(boolean open) {
         FolderWidget folder = new FolderWidget();
@@ -83,6 +83,11 @@ public class FolderWidget extends BasicContainer<FolderWidget> {
         this.verticalPadding = verticalPadding;
         this.horizontalPadding = horizontalPadding;
         this.itemPadding = itemPadding;
+        return this;
+    }
+
+    public FolderWidget withTitle(Text title) {
+        this.title.withText(title);
         return this;
     }
 }
