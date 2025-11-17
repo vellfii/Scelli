@@ -1,8 +1,6 @@
 package net.velli.scelli.widget;
 
-import net.minecraft.client.gui.screen.Screen;
-import net.velli.scelli.Scelli;
-import net.velli.scelli.widget.containers.WidgetContainer;
+import net.velli.scelli.widget.interfaces.WidgetContainer;
 import org.joml.Vector2f;
 
 public class WidgetPos {

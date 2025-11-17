@@ -1,13 +1,11 @@
-package net.velli.scelli.widget.containers;
+package net.velli.scelli.widget.widgets.containers;
 
 import net.minecraft.client.gui.DrawContext;
 import net.velli.scelli.ScelliUtil;
-import net.velli.scelli.ScreenHandler;
 import net.velli.scelli.widget.WidgetPos;
 import net.velli.scelli.widget.interfaces.ScrollableWidget;
 
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class ListWidget extends BasicContainer<ListWidget> implements ScrollableWidget {
     protected int verticalPadding = 10, horizontalPadding = 10, itemPadding = 2;

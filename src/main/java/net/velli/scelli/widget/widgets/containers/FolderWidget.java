@@ -1,13 +1,11 @@
-package net.velli.scelli.widget.containers;
+package net.velli.scelli.widget.widgets.containers;
 
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
-import net.velli.scelli.widget.ButtonWidget;
-import net.velli.scelli.widget.TextWidget;
-import net.velli.scelli.widget.Widget;
+import net.velli.scelli.widget.widgets.ButtonWidget;
+import net.velli.scelli.widget.widgets.TextWidget;
 import net.velli.scelli.widget.WidgetPos;
 
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class FolderWidget extends BasicContainer<FolderWidget> {

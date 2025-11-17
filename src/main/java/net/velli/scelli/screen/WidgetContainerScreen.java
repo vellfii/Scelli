@@ -3,8 +3,8 @@ package net.velli.scelli.screen;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
-import net.velli.scelli.widget.Widget;
-import net.velli.scelli.widget.containers.WidgetContainer;
+import net.velli.scelli.widget.widgets.Widget;
+import net.velli.scelli.widget.interfaces.WidgetContainer;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,10 +1,7 @@
-package net.velli.scelli.widget.containers;
+package net.velli.scelli.widget.interfaces;
 
 import net.minecraft.client.gui.DrawContext;
-import net.velli.scelli.widget.Widget;
-import net.velli.scelli.widget.interfaces.ClickableWidget;
-import net.velli.scelli.widget.interfaces.ScrollableWidget;
-import net.velli.scelli.widget.interfaces.TypableWidget;
+import net.velli.scelli.widget.widgets.Widget;
 import org.joml.Vector2f;
 
 import java.util.List;

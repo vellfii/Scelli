@@ -1,7 +1,8 @@
-package net.velli.scelli.widget;
+package net.velli.scelli.widget.widgets;
 
 import net.minecraft.client.gui.DrawContext;
 import net.velli.scelli.ScelliUtil;
+import net.velli.scelli.widget.WidgetPos;
 
 public abstract class Widget<T extends Widget<T>> {
     protected final WidgetPos position = new WidgetPos();

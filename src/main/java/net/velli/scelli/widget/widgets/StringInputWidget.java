@@ -1,8 +1,9 @@
-package net.velli.scelli.widget;
+package net.velli.scelli.widget.widgets;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.velli.scelli.Scelli;
+import net.velli.scelli.widget.StringInputData;
 import net.velli.scelli.widget.interfaces.ClickableWidget;
 import net.velli.scelli.widget.interfaces.TypableWidget;
 import org.lwjgl.glfw.GLFW;
@@ -11,15 +12,15 @@ import java.util.ArrayList;
 
 public class StringInputWidget extends Widget<StringInputWidget> implements ClickableWidget, TypableWidget {
 
-    private boolean selected = false;
+    protected boolean selected = false;
 
 
-    private StringInputData data = new StringInputData();
-    private ArrayList<StringInputData> history = new ArrayList<>();
-    private int historyIndex = 0;
-    private float blinkTimer = 0f;
-    private boolean guideVisible = true;
-    private boolean holding = false;
+    protected StringInputData data = new StringInputData();
+    protected ArrayList<StringInputData> history = new ArrayList<>();
+    protected int historyIndex = 0;
+    protected float blinkTimer = 0f;
+    protected boolean guideVisible = true;
+    protected boolean holding = false;
 
     public static StringInputWidget create(String string) {
         StringInputWidget widget = new StringInputWidget();
@@ -247,11 +248,21 @@ public class StringInputWidget extends Widget<StringInputWidget> implements Clic
             data.selectionStart = data.index;
             data.selectionEnd = data.index;
         }
+        if (keyCode == GLFW.GLFW_KEY_ENTER && !shiftHeld && !ctrlHeld) {
+            selected = false;
+        }
     }
 
-    private void logStateToHistory() {
+    protected void logStateToHistory() {
         history = new ArrayList<>(history.subList(0, historyIndex));
         history.add(data.clone());
         historyIndex = history.size();
+    }
+
+    @Override
+    public StringInputWidget withDimensions(int width, int height, boolean snap) {
+        position.width = width;
+        if (snap) position.renderWidth = width;
+        return getThis();
     }
 }

@@ -1,4 +1,4 @@
-package net.velli.scelli.widget;
+package net.velli.scelli.widget.widgets;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;

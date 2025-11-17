@@ -1,6 +1,6 @@
 package net.velli.scelli.widget.interfaces;
 
-import net.velli.scelli.widget.ButtonWidget;
+import net.velli.scelli.widget.widgets.ButtonWidget;
 
 public interface ClickableWidget {
     void onClick(float mouseX, float mouseY, boolean active);
