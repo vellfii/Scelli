@@ -18,6 +18,10 @@ public class DebugScreen extends WidgetContainerScreen {
                                 ButtonWidget.create().withText(Text.literal("button :3")).withDimensions(0, 50, true),
                                 SliderWidget.create().withThresholds(-10, 10),
                                 FolderWidget.create(false).withTitle(Text.literal("folder widget title! wow!"))
+                                        .addWidgets(
+                                                ButtonWidget.create(),
+                                                ButtonWidget.create()
+                                        )
                         )
                         .withAlignment(WidgetPos.Alignment.CENTER)
                         .withDimensions(200, 150, true),

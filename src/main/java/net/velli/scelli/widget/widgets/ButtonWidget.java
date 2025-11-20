@@ -25,7 +25,7 @@ public class ButtonWidget extends Widget<ButtonWidget> implements ClickableWidge
     protected void render(DrawContext context, float mouseX, float mouseY, int opacity, float delta) {
         TextRenderer textRenderer = Scelli.MC.textRenderer;
         if (hovered()) {
-            context.fill(0, 0, Math.round(renderedWidth()), Math.round(renderedHeight()), stackOpacity(0x66333333, opacity));
+            context.fill(0, 0, renderedWidth(), renderedHeight(), stackOpacity(0x66333333, opacity));
             context.drawBorder(0, 0, Math.round(renderedWidth()), Math.round(renderedHeight()), stackOpacity(0xDDEEFFFF, opacity));
         } else context.fill(0, 0, Math.round(renderedWidth()), Math.round(renderedHeight()), stackOpacity(0x66000000, opacity));
         AtomicInteger textY = new AtomicInteger(Math.round(renderedHeight() / 2) - textRenderer.fontHeight / 2 * text.size() - 2 * (text.size() - 1));

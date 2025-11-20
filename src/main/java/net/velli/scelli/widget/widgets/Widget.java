@@ -5,6 +5,7 @@ import net.velli.scelli.ScelliUtil;
 import net.velli.scelli.widget.WidgetPos;
 
 public abstract class Widget<T extends Widget<T>> {
+
     protected final WidgetPos position = new WidgetPos();
 
     private long lastRender = System.currentTimeMillis();
@@ -26,16 +27,16 @@ public abstract class Widget<T extends Widget<T>> {
     }
 
     public WidgetPos position() { return position; }
-    public float x() { return position.x; }
-    public float y() { return position.y; }
-    public float renderedX() { return position.renderX; }
-    public float renderedY() { return position.renderY; }
+    public int x() { return Math.round(position.x); }
+    public int y() { return Math.round(position.y); }
+    public int renderedX() { return Math.round(position.renderX); }
+    public int renderedY() { return Math.round(position.renderY); }
     public int width() { return position.width; }
     public int height() { return position.height; }
-    public float renderedWidth() { return position.renderWidth; }
-    public float renderedHeight() { return position.renderHeight; }
+    public int renderedWidth() { return Math.round(position.renderWidth); }
+    public int renderedHeight() { return Math.round(position.renderHeight); }
     public int opacity() { return position.opacity; }
-    public float renderedOpacity() { return position.renderOpacity; }
+    public int renderedOpacity() { return Math.round(position.renderOpacity); }
     public boolean hovered() { return position.hovered; }
     public float animationSpeed() { return position.animationSpeed; }
     public WidgetPos.Alignment alignment() { return position.alignment; }

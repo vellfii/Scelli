@@ -17,22 +17,22 @@ public class WidgetContainerScreen extends Screen implements WidgetContainer<Wid
     }
 
     @Override
-    public float x() {
+    public int x() {
         return 0;
     }
 
     @Override
-    public float renderedX() {
+    public int renderedX() {
         return 0;
     }
 
     @Override
-    public float y() {
+    public int y() {
         return 0;
     }
 
     @Override
-    public float renderedY() {
+    public int renderedY() {
         return 0;
     }
 
@@ -42,7 +42,7 @@ public class WidgetContainerScreen extends Screen implements WidgetContainer<Wid
     }
 
     @Override
-    public float renderedWidth() {
+    public int renderedWidth() {
         return width;
     }
 
@@ -52,7 +52,7 @@ public class WidgetContainerScreen extends Screen implements WidgetContainer<Wid
     }
 
     @Override
-    public float renderedHeight() {
+    public int renderedHeight() {
         return height;
     }
 
@@ -62,7 +62,7 @@ public class WidgetContainerScreen extends Screen implements WidgetContainer<Wid
     }
 
     @Override
-    public float renderedOpacity() {
+    public int renderedOpacity() {
         return 255;
     }
 

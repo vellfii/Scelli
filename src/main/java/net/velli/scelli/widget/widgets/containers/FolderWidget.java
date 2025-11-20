@@ -46,7 +46,7 @@ public class FolderWidget extends BasicContainer<FolderWidget> {
         title.position().renderWidth = title.position().width;
         title.position().x = horizontalPadding;
         title.position().renderX = horizontalPadding;
-        AtomicInteger currentHeight = new AtomicInteger(verticalPadding + 20);
+        AtomicInteger currentHeight = new AtomicInteger(Math.clamp(verticalPadding - 20, 20, 9999999));
         getWidgets().forEach(widget -> {
             if (getWidgets().indexOf(widget) > 1) {
                 widget.position().alignment = WidgetPos.Alignment.TOPLEFT;
@@ -68,8 +68,12 @@ public class FolderWidget extends BasicContainer<FolderWidget> {
     }
 
     protected int openHeight() {
-        AtomicInteger lowestHeight = new AtomicInteger(verticalPadding + 20);
-        getWidgets().forEach(widget -> lowestHeight.getAndAdd(Math.round(widget.renderedHeight()) + itemPadding) );
+        AtomicInteger lowestHeight = new AtomicInteger(Math.clamp(verticalPadding - 20, 20, 9999999));
+        getWidgets().forEach(widget -> {
+            if (getWidgets().indexOf(widget) > 1) {
+                lowestHeight.getAndAdd(Math.round(widget.renderedHeight()) + itemPadding);
+            }
+        } );
         lowestHeight.getAndAdd(verticalPadding - itemPadding);
         return lowestHeight.get();
     }

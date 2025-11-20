@@ -8,16 +8,16 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public interface WidgetContainer<T extends WidgetContainer<T>> extends ClickableWidget, ScrollableWidget, TypableWidget {
-    float x();
-    float renderedX();
-    float y();
-    float renderedY();
+    int x();
+    int renderedX();
+    int y();
+    int renderedY();
     int width();
-    float renderedWidth();
+    int renderedWidth();
     int height();
-    float renderedHeight();
+    int renderedHeight();
     int opacity();
-    float renderedOpacity();
+    int renderedOpacity();
 
     List<Widget<?>> getWidgets();
     default T addWidget(Widget<?> widget) { getWidgets().add(widget); return getThis(); }
@@ -38,7 +38,7 @@ public interface WidgetContainer<T extends WidgetContainer<T>> extends Clickable
             context.getMatrices().pushMatrix();
             Vector2f alignmentOffsets = widget.position().alignmentOffsets(this);
             context.getMatrices().translate(Math.round(alignmentOffsets.x), Math.round(alignmentOffsets.y));
-            context.getMatrices().translate(Math.round(widget.renderedX()), Math.round(widget.renderedY()));
+            context.getMatrices().translate(widget.renderedX(), widget.renderedY());
             context.enableScissor(0, 0, Math.round(widget.renderedWidth()), Math.round(widget.renderedHeight()));
             widget.render(context,
                     mouseX - widget.renderedX() - alignmentOffsets.x,
