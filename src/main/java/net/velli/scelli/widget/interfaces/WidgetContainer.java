@@ -39,7 +39,7 @@ public interface WidgetContainer<T extends WidgetContainer<T>> extends Clickable
             Vector2f alignmentOffsets = widget.position().alignmentOffsets(this);
             context.getMatrices().translate(Math.round(alignmentOffsets.x), Math.round(alignmentOffsets.y));
             context.getMatrices().translate(widget.renderedX(), widget.renderedY());
-            context.enableScissor(0, 0, Math.round(widget.renderedWidth()), Math.round(widget.renderedHeight()));
+            context.enableScissor(0, 0, widget.renderedWidth(), widget.renderedHeight());
             widget.render(context,
                     mouseX - widget.renderedX() - alignmentOffsets.x,
                     mouseY - widget.renderedY() - alignmentOffsets.y,
