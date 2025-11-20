@@ -34,7 +34,7 @@ public class ListWidget extends BasicContainer<ListWidget> implements Scrollable
 
     @Override
     protected void render(DrawContext context, float mouseX, float mouseY, int opacity, float delta) {
-        context.fill(0, 0, Math.round(renderedWidth()), Math.round(renderedHeight()), stackOpacity(0x33000000, opacity));
+        context.fill(0, 0, renderedWidth(), renderedHeight(), stackOpacity(0x33000000, opacity));
         AtomicInteger currentHeight = new AtomicInteger(verticalPadding);
         getWidgets().forEach(widget -> {
             widget.position().alignment = WidgetPos.Alignment.TOPLEFT;
@@ -44,11 +44,11 @@ public class ListWidget extends BasicContainer<ListWidget> implements Scrollable
             widget.position().renderY = currentHeight.get() - Math.round(renderScrollAmount);
             widget.position().width = width() - horizontalPadding * 2;
             widget.position().renderWidth = renderedWidth() - horizontalPadding * 2;
-            currentHeight.getAndAdd(Math.round(widget.renderedHeight()) + itemPadding);
+            currentHeight.getAndAdd(widget.renderedHeight() + itemPadding);
         });
         renderWidgets(context, mouseX, mouseY, opacity);
         currentHeight.getAndAdd(-itemPadding);
-        maxScrollAmount = Math.clamp(currentHeight.get() + verticalPadding - Math.round(renderedHeight()), 0, 999999999);
+        maxScrollAmount = Math.clamp(currentHeight.get() + verticalPadding - renderedHeight(), 0, 999999999);
         scrollAmount = Math.clamp(scrollAmount, 0, maxScrollAmount);
         renderScrollAmount = Math.clamp(renderScrollAmount, 0, maxScrollAmount);
         if (maxScrollAmount > 0) renderScrollbar(context, mouseX, mouseY, opacity, delta);
@@ -57,13 +57,13 @@ public class ListWidget extends BasicContainer<ListWidget> implements Scrollable
 
     protected void renderScrollbar(DrawContext context, float mouseX, float mouseY, int opacity, float delta) {
         if (holdingBar) setScrollAmount(scrollAnchor + (mouseY - mouseAnchor) / scaleFactor);
-        context.fill(Math.round(renderedWidth() - 4), 0, Math.round(renderedWidth()), Math.round(renderedHeight()), stackOpacity(0x66000000, opacity));
-        scaleFactor = renderedHeight() / (renderedHeight() + maxScrollAmount);
-        barHeight = Math.round(renderedHeight() * scaleFactor);
+        context.fill(renderedWidth() - 4, 0, renderedWidth(), renderedHeight(), stackOpacity(0x66000000, opacity));
+        scaleFactor = position().renderHeight / (position().renderHeight + maxScrollAmount);
+        barHeight = Math.round(position().renderHeight * scaleFactor);
         context.fill(
-                Math.round(renderedWidth() - 4),
+                renderedWidth() - 4,
                 Math.round(renderScrollAmount * scaleFactor),
-                Math.round(renderedWidth()),
+                renderedWidth(),
                 Math.round(renderScrollAmount * scaleFactor) + barHeight,
                 stackOpacity(0xDDEEFFFF, opacity)
         );

@@ -28,7 +28,7 @@ public class BasicContainer<T extends BasicContainer<T>>
     }
 
     @Override
-    public T withPosition(float x, float y, boolean snap) {
+    public T withPosition(int x, int y, boolean snap) {
         super.withPosition(x, y, snap);
         return getThis();
     }
