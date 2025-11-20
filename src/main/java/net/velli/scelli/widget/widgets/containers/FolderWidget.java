@@ -40,9 +40,9 @@ public class FolderWidget extends BasicContainer<FolderWidget> {
     @Override
     protected void render(DrawContext context, float mouseX, float mouseY, int opacity, float delta) {
         this.position.height = open ? openHeight() : 20;
-        context.fill(0, 0, Math.round(renderedWidth()), Math.round(renderedHeight()), stackOpacity(0x33000000, opacity));
+        context.fill(0, 0, renderedWidth(), renderedHeight(), stackOpacity(0x33000000, opacity));
         toggleButton.position().x = 2;
-        title.position().width = Math.round(renderedWidth()) - horizontalPadding * 2;
+        title.position().width = renderedWidth() - horizontalPadding * 2;
         title.position().renderWidth = title.position().width;
         title.position().x = horizontalPadding;
         title.position().renderX = horizontalPadding;
@@ -55,8 +55,8 @@ public class FolderWidget extends BasicContainer<FolderWidget> {
                 widget.position().y = currentHeight.get();
                 widget.position().renderY = currentHeight.get();
                 widget.position().width = width() - horizontalPadding * 2;
-                widget.position().renderWidth = renderedWidth() - horizontalPadding * 2;
-                currentHeight.getAndAdd(Math.round(widget.renderedHeight()) + itemPadding);
+                widget.position().renderWidth = position().renderWidth - horizontalPadding * 2;
+                currentHeight.getAndAdd(widget.renderedHeight() + itemPadding);
             }
         });
         renderWidgets(context, mouseX, mouseY, opacity);
@@ -71,7 +71,7 @@ public class FolderWidget extends BasicContainer<FolderWidget> {
         AtomicInteger lowestHeight = new AtomicInteger(Math.clamp(verticalPadding - 20, 20, 9999999));
         getWidgets().forEach(widget -> {
             if (getWidgets().indexOf(widget) > 1) {
-                lowestHeight.getAndAdd(Math.round(widget.renderedHeight()) + itemPadding);
+                lowestHeight.getAndAdd(widget.renderedHeight() + itemPadding);
             }
         } );
         lowestHeight.getAndAdd(verticalPadding - itemPadding);

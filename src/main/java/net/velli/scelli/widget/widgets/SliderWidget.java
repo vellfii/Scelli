@@ -55,7 +55,7 @@ public class SliderWidget extends BasicContainer<SliderWidget> implements Clicka
         TextRenderer textRenderer = Scelli.MC.textRenderer;
         int values = highThreshold - lowThreshold;
         int offset = lowThreshold;
-        if (holdingSlider && !inputBox.selected) setSliderProgress(Math.round((float) (values * Math.round(mouseX - 3)) / (renderedWidth() - inputBox.renderedWidth() - 8)) + offset);
+        if (holdingSlider && !inputBox.selected) setSliderProgress(Math.round((float) (values * Math.round(mouseX - 3)) / (Math.round(renderedWidth()) - Math.round(inputBox.renderedWidth()) - 8)) + offset);
         int lowThresholdWidth = textRenderer.getWidth(String.valueOf(lowThreshold));
         int highThresholdWidth = textRenderer.getWidth(String.valueOf(highThreshold));
         inputBox.position.width = Math.max(lowThresholdWidth, highThresholdWidth) + 8;
@@ -73,12 +73,12 @@ public class SliderWidget extends BasicContainer<SliderWidget> implements Clicka
             else setSliderProgress(Integer.parseInt(inputBox.data.string.length() >= 5 ? inputBox.data.string.substring(0, 5) : inputBox.data.string));
         }
         renderWidgets(context, mouseX, mouseY, Math.round((float) opacity() / 255 * opacity));
-        context.fill(3, 7, renderedWidth() - renderedWidth() - 3, 9, stackOpacity(0xFF000000, opacity));
+        context.fill(3, 7, Math.round(renderedWidth()) - Math.round(inputBox.renderedWidth()) - 3, 9, stackOpacity(0xFF000000, opacity));
 
 
-        int barX = 3 + (renderedWidth()) - inputBox.renderedWidth() - 8 * Math.round((float) (sliderProgress - offset) / values);
+        int barX = Math.round(3f + (Math.round(renderedWidth()) - Math.round(inputBox.renderedWidth()) - 8) * ((float) (sliderProgress - offset) / values));
         renderedBarX = ScelliUtil.lerp(renderedBarX, barX, 16f * delta);
-        context.fill(Math.round(renderedBarX), 3, Math.round(renderedBarX) + 2, renderedHeight() - 3, stackOpacity(0xFFFFFFFF, opacity));
+        context.fill(Math.round(renderedBarX), 3, Math.round(renderedBarX) + 2, Math.round(renderedHeight()) - 3, stackOpacity(0xFFFFFFFF, opacity));
     }
 
     @Override

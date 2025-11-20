@@ -12,9 +12,8 @@ public class WidgetPos {
         Alignment(String id) { this.id = id; }
         public String getId() { return this.id; }
     }
-    public float x = 0, y = 0, renderX = 0, renderY = 0;
-    public int width = 16, height = 16;
-    public float renderWidth = 16, renderHeight = 16;
+    public int x = 0, y = 0, width = 16, height = 16;
+    public float renderX = 0, renderY = 0, renderWidth = 16, renderHeight = 16;
     public Alignment alignment = Alignment.TOPLEFT;
     public boolean hovered = false;
     public int opacity = 255;

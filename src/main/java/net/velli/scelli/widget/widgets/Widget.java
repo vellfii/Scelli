@@ -18,17 +18,17 @@ public abstract class Widget<T extends Widget<T>> {
         opacity = Math.round(position.renderOpacity / 255 * opacity);
         render(context, mouseX, mouseY, opacity, delta);
         float t = 16f * delta * animationSpeed();
-        position.renderX = ScelliUtil.lerp(renderedX(), x(), t);
-        position.renderY = ScelliUtil.lerp(renderedY(), y(), t);
-        position.renderWidth = ScelliUtil.lerp(renderedWidth(), width(), t);
-        position.renderHeight = ScelliUtil.lerp(renderedHeight(), height(), t);
-        position.renderOpacity = ScelliUtil.lerp(renderedOpacity(), opacity(), t);
+        position.renderX = ScelliUtil.lerp(position.renderX, x(), t);
+        position.renderY = ScelliUtil.lerp(position().renderY, y(), t);
+        position.renderWidth = ScelliUtil.lerp(position().renderWidth, width(), t);
+        position.renderHeight = ScelliUtil.lerp(position().renderHeight, height(), t);
+        position.renderOpacity = ScelliUtil.lerp(position().renderOpacity, opacity(), t);
         lastRender = System.currentTimeMillis();
     }
 
     public WidgetPos position() { return position; }
-    public int x() { return Math.round(position.x); }
-    public int y() { return Math.round(position.y); }
+    public int x() { return position.x; }
+    public int y() { return position.y; }
     public int renderedX() { return Math.round(position.renderX); }
     public int renderedY() { return Math.round(position.renderY); }
     public int width() { return position.width; }
@@ -43,7 +43,7 @@ public abstract class Widget<T extends Widget<T>> {
 
     public abstract T getThis();
 
-    public T withPosition(float x, float y, boolean snap) {
+    public T withPosition(int x, int y, boolean snap) {
         this.position.x = x;
         this.position.y = y;
         if (snap) {
