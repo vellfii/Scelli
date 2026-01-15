@@ -2,116 +2,75 @@ package net.velli.scelli.widget.interfaces;
 
 import net.minecraft.client.gui.DrawContext;
 import net.velli.scelli.widget.widgets.Widget;
+import net.velli.scelli.widget.widgets.WidgetPos;
 import org.joml.Vector2f;
+import org.joml.Vector2i;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
-public interface WidgetContainer<T extends WidgetContainer<T>> extends ClickableWidget, ScrollableWidget, TypableWidget {
+public interface WidgetContainer<T extends WidgetContainer<T>> extends ClickableWidget {
     int x();
-    int renderedX();
     int y();
-    int renderedY();
     int width();
-    int renderedWidth();
     int height();
-    int renderedHeight();
     int opacity();
-    int renderedOpacity();
-
     List<Widget<?>> getWidgets();
-    default T addWidget(Widget<?> widget) { getWidgets().add(widget); return getThis(); }
-    default T addWidgets(List<Widget<?>> widgets) { getWidgets().addAll(widgets); return getThis(); }
-    default T addWidgets(Widget<?>... widgets) { getWidgets().addAll(List.of(widgets)); return getThis(); }
-    default T setWidgets(List<Widget<?>> widgets) {
-        clearWidgets();
-        addWidgets(widgets);
-        return getThis();
-    }
-    default void removeWidget(Widget<?> widget) { getWidgets().remove(widget); }
-    default void removeWidget(int index) { getWidgets().remove(index); }
-    default void clearWidgets() { getWidgets().clear(); }
-    T getThis();
+    T getWidget();
 
-    default void renderWidgets(DrawContext context, float mouseX, float mouseY, int opacity) {
-        getWidgets().forEach(widget -> {
+    T addWidgets(Widget<?>... widgets);
+    void removeWidget(Widget<?> widget);
+
+    default void renderChildren(DrawContext context, int mouseX, int mouseY) {
+        for (Widget<?> widget : getWidgets()) {
+            Vector2i offset = alignmentOffset(widget);
             context.getMatrices().pushMatrix();
-            Vector2f alignmentOffsets = widget.position().alignmentOffsets(this);
-            context.getMatrices().translate(Math.round(alignmentOffsets.x), Math.round(alignmentOffsets.y));
-            context.getMatrices().translate(widget.renderedX(), widget.renderedY());
-            context.enableScissor(0, 0, widget.renderedWidth(), widget.renderedHeight());
-            widget.render(context,
-                    mouseX - widget.renderedX() - alignmentOffsets.x,
-                    mouseY - widget.renderedY() - alignmentOffsets.y,
-                    Math.round((float) opacity / 255 * renderedOpacity()));
-            context.disableScissor();
+            context.getMatrices().translate(widget.x() + offset.x(), widget.y() + offset.y());
+            widget.render(context, mouseX, mouseY);
             context.getMatrices().popMatrix();
-        });
+        }
     }
 
-    default void hoverWidgets(float mouseX, float mouseY, boolean active) {
-        getWidgets().forEach(widget -> {
-            boolean hovered = isHovered(mouseX, mouseY) && active;
-            Vector2f alignmentOffsets = widget.position().alignmentOffsets(this);
-            widget.hover(mouseX - widget.renderedX() - alignmentOffsets.x,
-                    mouseY - widget.renderedY() - alignmentOffsets.y,
-                    hovered);
-        });
+    static Vector2i alignmentOffset(Widget<?> widget) {
+        if (widget.parent == null) return new Vector2i(0, 0);
+        WidgetPos.Alignment alignment = widget.alignment();
+        int x = 0, y = 0;
+        if (!alignment.id().contains("left")) {
+            if (alignment.id().contains("right")) x = widget.parent.width() - widget.width();
+            else x = widget.parent.width() / 2 - widget.width() / 2;
+        }
+        if (!alignment.id().contains("top")) {
+            if (alignment.id().contains("bottom")) y = widget.parent.height() - widget.height();
+            else y = widget.parent.height() / 2 - widget.height() / 2;
+        }
+        return new Vector2i(x, y);
     }
 
-    default boolean isHovered(float mouseX, float mouseY) {
-        boolean inBoundsX = mouseX > 0 && mouseX <= width();
-        boolean inBoundsY = mouseY > 0 && mouseY <= height();
-        return inBoundsX && inBoundsY;
+    default void hoverChildren(int mouseX, int mouseY, boolean active) {
+        for (Widget<?> widget : getWidgets()) {
+            Vector2i offset = alignmentOffset(widget);
+            widget.hover(mouseX - offset.x(), mouseY - offset.y(), active);
+        }
     }
 
-    default boolean onScroll(double amount) {
-        AtomicBoolean status = new AtomicBoolean(false);
-        getWidgets().forEach(widget -> {
-            if (widget instanceof ScrollableWidget sc && widget.hovered()) {
-                status.set(sc.onScroll(amount));
-            }
-        });
-        return status.get();
+    default void onClick(int mouseX, int mouseY) {
+        clickChildren(mouseX, mouseY);
     }
 
-    default void onClick(float mouseX, float mouseY, boolean active) {
-        getWidgets().forEach(widget -> {
-            if (widget instanceof ClickableWidget cw) {
-                boolean hovered = isHovered(mouseX, mouseY) && active;
-                Vector2f alignmentOffsets = widget.position().alignmentOffsets(this);
-                cw.onClick(mouseX - widget.x() - alignmentOffsets.x,
-                        mouseY - widget.y() - alignmentOffsets.y,
-                        hovered);
-            }
-        });
+    default void clickChildren(int mouseX, int mouseY) {
+        for (Widget<?> widget : getWidgets()) {
+            Vector2i offset = alignmentOffset(widget);
+            if (widget instanceof ClickableWidget cw) cw.onClick(mouseX, mouseY);
+        }
     }
 
-    default void onRelease(float mouseX, float mouseY, boolean active) {
-        getWidgets().forEach(widget -> {
-            if (widget instanceof ClickableWidget cw) {
-                boolean hovered = isHovered(mouseX, mouseY) && active;
-                Vector2f alignmentOffsets = widget.position().alignmentOffsets(this);
-                cw.onRelease(mouseX - widget.x() - alignmentOffsets.x,
-                        mouseY - widget.y() - alignmentOffsets.y,
-                        hovered);
-            }
-        });
+    default void onRelease(int mouseX, int mouseY) {
+        releaseChildren(mouseX, mouseY);
     }
 
-    default void onType(char chr) {
-        getWidgets().forEach(widget -> {
-            if (widget instanceof TypableWidget tw) {
-                tw.onType(chr);
-            }
-        });
-    }
-
-    default void onKeyPressed(int keyCode, int modifiers) {
-        getWidgets().forEach(widget -> {
-            if (widget instanceof TypableWidget tw) {
-                tw.onKeyPressed(keyCode, modifiers);
-            }
-        });
+    default void releaseChildren(int mouseX, int mouseY) {
+        for (Widget<?> widget : getWidgets()) {
+            Vector2i offset = alignmentOffset(widget);
+            if (widget instanceof ClickableWidget cw) cw.onRelease(mouseX + offset.x(), mouseY + offset.y());
+        }
     }
 }

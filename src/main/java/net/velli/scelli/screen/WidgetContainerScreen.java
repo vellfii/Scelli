@@ -1,10 +1,13 @@
 package net.velli.scelli.screen;
 
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.input.CharInput;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.text.Text;
-import net.velli.scelli.widget.widgets.Widget;
 import net.velli.scelli.widget.interfaces.WidgetContainer;
+import net.velli.scelli.widget.widgets.Widget;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,17 +25,7 @@ public class WidgetContainerScreen extends Screen implements WidgetContainer<Wid
     }
 
     @Override
-    public int renderedX() {
-        return 0;
-    }
-
-    @Override
     public int y() {
-        return 0;
-    }
-
-    @Override
-    public int renderedY() {
         return 0;
     }
 
@@ -42,17 +35,7 @@ public class WidgetContainerScreen extends Screen implements WidgetContainer<Wid
     }
 
     @Override
-    public int renderedWidth() {
-        return width;
-    }
-
-    @Override
     public int height() {
-        return height;
-    }
-
-    @Override
-    public int renderedHeight() {
         return height;
     }
 
@@ -62,54 +45,66 @@ public class WidgetContainerScreen extends Screen implements WidgetContainer<Wid
     }
 
     @Override
-    public int renderedOpacity() {
-        return 255;
-    }
-
-    @Override
     public List<Widget<?>> getWidgets() {
         return widgets;
     }
 
     @Override
-    public WidgetContainerScreen getThis() {
-        return null;
+    public WidgetContainerScreen getWidget() {
+        return this;
+    }
+
+    public WidgetContainerScreen addWidgets(Widget<?>... widgets) {
+        for (Widget<?> widget : widgets) {
+            if (widget.parent != null) widget.parent.removeWidget(widget);
+            widget.parent = getWidget();
+            this.widgets.add(widget);
+        }
+        return getWidget();
+    }
+
+    @Override
+    public void removeWidget(Widget<?> widget) {
+        if (getWidgets().contains(widget)) {
+            widgets.remove(widget);
+            widget.parent = null;
+        }
     }
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
         super.render(context, mouseX, mouseY, deltaTicks);
-        renderWidgets(context, mouseX, mouseY, opacity());
-        hoverWidgets(mouseX, mouseY, true);
+        hoverChildren(mouseX, mouseY, true);
+        renderChildren(context, mouseX, mouseY);
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        onClick((float) mouseX, (float) mouseY, true);
-        return super.mouseClicked(mouseX, mouseY, button);
+    public boolean mouseClicked(Click click, boolean doubled) {
+        onClick((int) click.x(), (int) click.y());
+        return super.mouseClicked(click, doubled);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        onRelease((float) mouseX, (float) mouseY, true);
-        return super.mouseReleased(mouseX, mouseY, button);
+    public boolean mouseReleased(Click click) {
+        onRelease((int) click.x(), (int) click.y());
+        return super.mouseReleased(click);
     }
 
-    @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
-        onScroll(verticalAmount * 15);
-        return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
-    }
-
-    @Override
-    public boolean charTyped(char chr, int modifiers) {
-        onType(chr);
-        return super.charTyped(chr, modifiers);
-    }
-
-    @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        onKeyPressed(keyCode, modifiers);
-        return super.keyPressed(keyCode, scanCode, modifiers);
-    }
+//    @Override
+//    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+//        onScroll(verticalAmount * 15);
+//        return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
+//    }
+//
+//    @Override
+//    public boolean charTyped(CharInput input) {
+//        onType(input.asString().charAt(0));
+//        return super.charTyped(input);
+//    }
+//
+//    @Override
+//    public boolean keyPressed(KeyInput input) {
+//        onKeyPressed(input.key(), input.modifiers());
+//        return super.keyPressed(input);
+//    }
 }

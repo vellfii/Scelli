@@ -1,91 +1,54 @@
 package net.velli.scelli.widget.widgets;
 
 import net.minecraft.client.gui.DrawContext;
-import net.velli.scelli.ScelliUtil;
-import net.velli.scelli.widget.WidgetPos;
+import net.velli.scelli.widget.interfaces.WidgetContainer;
 
 public abstract class Widget<T extends Widget<T>> {
 
-    protected final WidgetPos position = new WidgetPos();
+    private final WidgetPos pos = new WidgetPos();
+    public WidgetContainer<?> parent;
+
+    protected boolean hovered = false;
 
     private long lastRender = System.currentTimeMillis();
-    protected abstract void render(DrawContext context, float mouseX, float mouseY, int opacity, float delta);
-    public void hover(float mouseX, float mouseY, boolean active) {
-        this.position.hovered = isHovered(mouseX, mouseY) && active;
-    }
-    public void render(DrawContext context, float mouseX, float mouseY, int opacity) {
+    public abstract void renderMain(DrawContext context, int mouseX, int mouseY, float delta);
+    public void render(DrawContext context, int mouseX, int mouseY) {
         float delta = (float) (System.currentTimeMillis() - lastRender) / 1000;
-        opacity = Math.round(position.renderOpacity / 255 * opacity);
-        render(context, mouseX, mouseY, opacity, delta);
-        float t = 16f * delta * animationSpeed();
-        position.renderX = ScelliUtil.lerp(position.renderX, x(), t);
-        position.renderY = ScelliUtil.lerp(position().renderY, y(), t);
-        position.renderWidth = ScelliUtil.lerp(position().renderWidth, width(), t);
-        position.renderHeight = ScelliUtil.lerp(position().renderHeight, height(), t);
-        position.renderOpacity = ScelliUtil.lerp(position().renderOpacity, opacity(), t);
+        renderMain(context, mouseX, mouseY, delta);
         lastRender = System.currentTimeMillis();
     }
 
-    public WidgetPos position() { return position; }
-    public int x() { return position.x; }
-    public int y() { return position.y; }
-    public int renderedX() { return Math.round(position.renderX); }
-    public int renderedY() { return Math.round(position.renderY); }
-    public int width() { return position.width; }
-    public int height() { return position.height; }
-    public int renderedWidth() { return Math.round(position.renderWidth); }
-    public int renderedHeight() { return Math.round(position.renderHeight); }
-    public int opacity() { return position.opacity; }
-    public int renderedOpacity() { return Math.round(position.renderOpacity); }
-    public boolean hovered() { return position.hovered; }
-    public float animationSpeed() { return position.animationSpeed; }
-    public WidgetPos.Alignment alignment() { return position.alignment; }
-
-    public abstract T getThis();
-
-    public T withPosition(int x, int y, boolean snap) {
-        this.position.x = x;
-        this.position.y = y;
-        if (snap) {
-            this.position.renderX = x;
-            this.position.renderY = y;
-        }
-        return getThis();
+    public void hover(int mouseX, int mouseY, boolean active) {
+        hovered = active && pos.isHovered(mouseX, mouseY);
     }
 
-    public T withDimensions(int width, int height, boolean snap) {
-        this.position.width = width;
-        this.position.height = height;
-        if (snap) {
-            this.position.renderWidth = width;
-            this.position.renderHeight = height;
-        }
-        return getThis();
+    public abstract T getWidget();
+
+    public int x() { return pos.x; }
+    public int y() { return pos.y; }
+    public int width() { return pos.width; }
+    public int height() { return pos.height; }
+    public int opacity() { return pos.opacity; }
+    public WidgetPos.Alignment alignment() { return pos.alignment; }
+
+    public T withPosition(int x, int y) {
+        pos.x = x;
+        pos.y = y;
+        return getWidget();
     }
 
-    public T withOpacity(int opacity, boolean snap) {
-        this.position.opacity = Math.clamp(opacity, 0, 255);
-        if (snap) this.position.renderOpacity = Math.clamp(opacity, 0, 255);
-        return getThis();
+    public T withDimensions(int width, int height) {
+        pos.width = width;
+        pos.height = height;
+        return getWidget();
     }
 
     public T withAlignment(WidgetPos.Alignment alignment) {
-        this.position.alignment = alignment;
-        return getThis();
+        pos.alignment = alignment;
+        return getWidget();
     }
 
-    public T withAnimationSpeed(float speed) {
-        this.position.animationSpeed = Math.clamp(speed, 0, 100);
-        return getThis();
-    }
-
-    public boolean isHovered(float mouseX, float mouseY) {
-        boolean inBoundsX = mouseX >= 0 && mouseX < renderedWidth();
-        boolean inBoundsY = mouseY >= 0 && mouseY < renderedHeight();
-        return inBoundsX && inBoundsY;
-    }
-
-    public static int stackOpacity(int color, int opacity) {
-        return (color & 0x00FFFFFF) | (Math.round((float) ((color >> 24) & 0xFF) / 255 * opacity) << 24);
+    public boolean isHovered() {
+        return hovered;
     }
 }
