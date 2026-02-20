@@ -72,6 +72,14 @@ public class WidgetContainerScreen extends Screen implements WidgetContainer<Wid
     }
 
     @Override
+    public void clearWidgets() {
+        for (Widget<?> widget : getWidgets()) {
+            widgets.remove(widget);
+            widget.parent = null;
+        }
+    }
+
+    @Override
     public void render(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
         super.render(context, mouseX, mouseY, deltaTicks);
         hoverChildren(mouseX, mouseY, true);
@@ -90,7 +98,13 @@ public class WidgetContainerScreen extends Screen implements WidgetContainer<Wid
         return super.mouseReleased(click);
     }
 
-//    @Override
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+        onScroll((int) verticalAmount);
+        return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
+    }
+
+    //    @Override
 //    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
 //        onScroll(verticalAmount * 15);
 //        return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);

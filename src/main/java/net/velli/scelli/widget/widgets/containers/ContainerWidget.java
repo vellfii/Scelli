@@ -2,14 +2,17 @@ package net.velli.scelli.widget.widgets.containers;
 
 import net.minecraft.client.gui.DrawContext;
 import net.velli.scelli.widget.interfaces.WidgetContainer;
+import net.velli.scelli.widget.widgets.Alignment;
 import net.velli.scelli.widget.widgets.Widget;
-import org.joml.Vector2i;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-public abstract class ContainerWidget extends Widget<ContainerWidget> implements WidgetContainer<ContainerWidget> {
-    private final List<Widget<?>> widgets = new ArrayList<>();
+public abstract class ContainerWidget<T extends ContainerWidget<T>> extends Widget<ContainerWidget<T>> implements WidgetContainer<ContainerWidget<T>> {
+    private final List<Widget<?>> widgets = new CopyOnWriteArrayList<>();
+
+    @Override
+    public abstract T getWidget();
 
     @Override
     public List<Widget<?>> getWidgets() {
@@ -17,7 +20,7 @@ public abstract class ContainerWidget extends Widget<ContainerWidget> implements
     }
 
     @Override
-    public ContainerWidget addWidgets(Widget<?>... widgets) {
+    public T addWidgets(Widget<?>... widgets) {
         for (Widget<?> widget : widgets) {
             if (widget.parent != null) widget.parent.removeWidget(widget);
             widget.parent = getWidget();
@@ -35,17 +38,16 @@ public abstract class ContainerWidget extends Widget<ContainerWidget> implements
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY) {
-        super.render(context, mouseX, mouseY);
-        Vector2i offset = WidgetContainer.alignmentOffset(getWidget());
-        context.enableScissor(
-                x() + offset.x(),
-                y() + offset.y(),
-                x() + offset.x() + width(),
-                y() + offset.y() + height()
-        );
+    public void clearWidgets() {
+        for (Widget<?> widget : getWidgets()) {
+            widgets.remove(widget);
+            widget.parent = null;
+        }
+    }
+
+    @Override
+    public void renderMain(DrawContext context, int mouseX, int mouseY, float delta) {
         renderChildren(context, mouseX, mouseY);
-        context.disableScissor();
     }
 
     @Override
@@ -55,7 +57,20 @@ public abstract class ContainerWidget extends Widget<ContainerWidget> implements
     }
 
     @Override
-    public ContainerWidget getWidget() {
-        return this;
+    @SuppressWarnings("unchecked")
+    public T withPosition(int x, int y, boolean snap) {
+        return (T) super.withPosition(x, y, snap);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public T withDimensions(int width, int height, boolean snap) {
+        return (T) super.withDimensions(width, height, snap);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public T withAlignment(Alignment alignment) {
+        return (T) super.withAlignment(alignment);
     }
 }

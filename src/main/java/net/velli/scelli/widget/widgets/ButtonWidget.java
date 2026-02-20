@@ -1,27 +1,19 @@
 package net.velli.scelli.widget.widgets;
 
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.text.Text;
+import net.velli.scelli.Scelli;
 import net.velli.scelli.widget.interfaces.ClickableWidget;
+import net.velli.scelli.widget.interfaces.WidgetContainer;
 
-public class ButtonWidget extends Widget<ButtonWidget> implements ClickableWidget {
-    private ButtonWidget() {}
+import java.util.List;
 
-    public static ButtonWidget create(int x, int y, int width, int height) {
-        ButtonWidget widget = new ButtonWidget();
-        widget.withPosition(x, y);
-        widget.withDimensions(width, height);
-        return widget;
-    }
-
-    public static ButtonWidget create() {
-        return create(0, 0, 16, 16);
-    }
-
+public class ButtonWidget extends Widget<ButtonWidget> implements ClickableWidget, WidgetContainer<ButtonWidget> {
     protected ClickEvent processor;
+    private final TextDisplayWidget text = Widgets.create(TextDisplayWidget::new, 0, 0, width(), height()).withTextAlignment(Alignment.CENTER);
 
     @Override
     public void onClick(int mouseX, int mouseY) {
-        if (isHovered()) System.out.println("wow amazing");
         if (processor != null) processor.onClick(getWidget(), mouseX, mouseY);
     }
 
@@ -37,6 +29,13 @@ public class ButtonWidget extends Widget<ButtonWidget> implements ClickableWidge
             context.fill(0, 0, width(), height(), 0x66333333);
             context.drawStrokedRectangle(0, 0, width(), height(), 0xFFFFFFFF);
         }
+        text.withPosition(0, height() / 2 - Scelli.MC.textRenderer.fontHeight / 2, true);
+        renderWidget(text, context, mouseX, mouseY);
+    }
+
+    @Override
+    public List<Widget<?>> getWidgets() {
+        return List.of(text);
     }
 
     @Override
@@ -44,7 +43,22 @@ public class ButtonWidget extends Widget<ButtonWidget> implements ClickableWidge
         return this;
     }
 
-    public ButtonWidget withProcessor(ClickEvent processor) {
+    @Override
+    public void clearWidgets() {
+
+    }
+
+    @Override
+    public void removeWidget(Widget<?> widget) {
+
+    }
+
+    @Override
+    public ButtonWidget addWidgets(Widget<?>[] widgets) {
+        return getWidget();
+    }
+
+    public ButtonWidget withClickEvent(ClickEvent processor) {
         this.processor = processor;
         return getWidget();
     }
@@ -54,4 +68,14 @@ public class ButtonWidget extends Widget<ButtonWidget> implements ClickableWidge
         void onRelease(ButtonWidget button, int mouseX, int mouseY);
     }
 
+    @Override
+    public ButtonWidget withDimensions(int width, int height, boolean snap) {
+        text.withDimensions(width, height, snap);
+        return super.withDimensions(width, height, snap);
+    }
+
+    public ButtonWidget withText(Text text) {
+        this.text.setLines(text);
+        return getWidget();
+    }
 }

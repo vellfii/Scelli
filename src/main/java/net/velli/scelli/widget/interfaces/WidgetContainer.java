@@ -1,6 +1,7 @@
 package net.velli.scelli.widget.interfaces;
 
 import net.minecraft.client.gui.DrawContext;
+import net.velli.scelli.widget.widgets.Alignment;
 import net.velli.scelli.widget.widgets.Widget;
 import net.velli.scelli.widget.widgets.WidgetPos;
 import org.joml.Vector2f;
@@ -8,7 +9,7 @@ import org.joml.Vector2i;
 
 import java.util.List;
 
-public interface WidgetContainer<T extends WidgetContainer<T>> extends ClickableWidget {
+public interface WidgetContainer<T extends WidgetContainer<T>> extends ClickableWidget, ScrollableWidget {
     int x();
     int y();
     int width();
@@ -19,20 +20,27 @@ public interface WidgetContainer<T extends WidgetContainer<T>> extends Clickable
 
     T addWidgets(Widget<?>... widgets);
     void removeWidget(Widget<?> widget);
+    void clearWidgets();
 
     default void renderChildren(DrawContext context, int mouseX, int mouseY) {
         for (Widget<?> widget : getWidgets()) {
-            Vector2i offset = alignmentOffset(widget);
-            context.getMatrices().pushMatrix();
-            context.getMatrices().translate(widget.x() + offset.x(), widget.y() + offset.y());
-            widget.render(context, mouseX, mouseY);
-            context.getMatrices().popMatrix();
+            renderWidget(widget, context, mouseX, mouseY);
         }
+    }
+
+    default void renderWidget(Widget<?> widget, DrawContext context, int mouseX, int mouseY) {
+        Vector2i offset = alignmentOffset(widget);
+        context.getMatrices().pushMatrix();
+        context.enableScissor(0, 0, width(), height());
+        context.getMatrices().translate(widget.x() + offset.x(), widget.y() + offset.y());
+        widget.render(context, mouseX, mouseY);
+        context.disableScissor();
+        context.getMatrices().popMatrix();
     }
 
     static Vector2i alignmentOffset(Widget<?> widget) {
         if (widget.parent == null) return new Vector2i(0, 0);
-        WidgetPos.Alignment alignment = widget.alignment();
+        Alignment alignment = widget.alignment();
         int x = 0, y = 0;
         if (!alignment.id().contains("left")) {
             if (alignment.id().contains("right")) x = widget.parent.width() - widget.width();
@@ -48,7 +56,7 @@ public interface WidgetContainer<T extends WidgetContainer<T>> extends Clickable
     default void hoverChildren(int mouseX, int mouseY, boolean active) {
         for (Widget<?> widget : getWidgets()) {
             Vector2i offset = alignmentOffset(widget);
-            widget.hover(mouseX - offset.x(), mouseY - offset.y(), active);
+            widget.hover(mouseX - offset.x() - x(), mouseY - offset.y() - y(), active);
         }
     }
 
@@ -71,6 +79,16 @@ public interface WidgetContainer<T extends WidgetContainer<T>> extends Clickable
         for (Widget<?> widget : getWidgets()) {
             Vector2i offset = alignmentOffset(widget);
             if (widget instanceof ClickableWidget cw) cw.onRelease(mouseX + offset.x(), mouseY + offset.y());
+        }
+    }
+
+    default void onScroll(int amount) {
+        scrollChildren(amount);
+    }
+
+    default void scrollChildren(int amount) {
+        for (Widget<?> widget : getWidgets()) {
+            if (widget instanceof ScrollableWidget sw) sw.onScroll(amount);
         }
     }
 }
