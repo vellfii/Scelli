@@ -51,7 +51,7 @@ public class VerticalListWidget extends ContainerWidget<VerticalListWidget> {
         }
         scrollBar.withPosition(width() - 4, 0, true);
         scrollBar.withDimensions(4, height(), true);
-        int trueHeight = maxColumnHeight + verticalPadding * 2 - 12;
+        int trueHeight = maxColumnHeight + verticalPadding * 2;
         scrollBar.setMaxScrollAmount(trueHeight - height());
         if (trueHeight > height()) {
             scrollBar.setScaleFactor((float) height() / trueHeight);
@@ -64,7 +64,7 @@ public class VerticalListWidget extends ContainerWidget<VerticalListWidget> {
             for (Widget<?> widget : column) {
                 int offsetX = (columnWidth - widget.width()) / 2;
                 offsetX = Math.max(0, offsetX + (width() - columnsWidth) / 2);
-                widget.withPosition(currentX + offsetX, currentY - scrollBar.scrollAmount() - 12, true);
+                widget.withPosition(currentX + offsetX, currentY - scrollBar.scrollAmount(), true);
                 currentY += widget.height() + itemPadding;
             }
 

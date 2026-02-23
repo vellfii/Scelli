@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 public class Scelli implements ClientModInitializer {
     public static MinecraftClient MC = MinecraftClient.getInstance();
-    public static final String MOD_ID = "scelli";
+    public static final String MOD_ID = "assets/scelli";
     public static final Logger LOGGER = LoggerFactory.getLogger("Scelli");
 
     @Override
