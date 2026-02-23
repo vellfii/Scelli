@@ -17,7 +17,6 @@ public class TextDisplayWidget extends Widget<TextDisplayWidget> {
 
     @Override
     public void renderMain(DrawContext context, int mouseX, int mouseY, float delta) {
-//        context.enableScissor(0, 0, width(), height());
         TextRenderer textRenderer = Scelli.MC.textRenderer;
         int offsetY = 0;
         for (OrderedText line : lines) {
@@ -26,11 +25,8 @@ public class TextDisplayWidget extends Widget<TextDisplayWidget> {
             else if (Objects.equals(alignment, Alignment.RIGHT)) offsetX = width() - textRenderer.getWidth(line);
             else offsetX = width() / 2 - textRenderer.getWidth(line) / 2;
             context.drawText(textRenderer, line, offsetX, offsetY, 0xFFFFFFFF, true);
-//            context.drawText(textRenderer, line, 0, 0, 0xFFFFFFFF, true);
             offsetY += textRenderer.fontHeight + 1;
         }
-        withDimensions(width(), offsetY - textRenderer.fontHeight - 1, true);
-//        context.disableScissor();
     }
 
     @Override
@@ -50,6 +46,7 @@ public class TextDisplayWidget extends Widget<TextDisplayWidget> {
 
     public TextDisplayWidget setLines(ArrayList<OrderedText> lines) {
         this.lines = lines;
+        withDimensions(width(), (lines.size() * (Scelli.MC.textRenderer.fontHeight + 1)) - 1, true);
         return getWidget();
     }
 
