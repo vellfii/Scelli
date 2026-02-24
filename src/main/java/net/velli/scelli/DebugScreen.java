@@ -60,10 +60,11 @@ public class DebugScreen extends WidgetContainerScreen {
                                         .addLine(Text.literal("Misc")).withTextAlignment(Alignment.CENTER),
                                 Widgets.create(ButtonWidget::new, -8, 0, 65, 20),
                                 Widgets.create(ButtonWidget::new, -8, 0, 65, 20),
-                                Widgets.create(ButtonWidget::new, -8, 0, 65, 20)
+                                Widgets.create(ButtonWidget::new, -8, 0, 65, 500)
                         )
                         .withAlignment(Alignment.CENTER)
                         .withPadding(0, 5, 2, 4)
+                        .reversed()
 
 
         );

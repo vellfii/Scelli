@@ -104,21 +104,15 @@ public class WidgetContainerScreen extends Screen implements WidgetContainer<Wid
         return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
     }
 
-    //    @Override
-//    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
-//        onScroll(verticalAmount * 15);
-//        return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
-//    }
-//
-//    @Override
-//    public boolean charTyped(CharInput input) {
-//        onType(input.asString().charAt(0));
-//        return super.charTyped(input);
-//    }
-//
-//    @Override
-//    public boolean keyPressed(KeyInput input) {
-//        onKeyPressed(input.key(), input.modifiers());
-//        return super.keyPressed(input);
-//    }
+    @Override
+    public boolean charTyped(CharInput input) {
+        onType(input.asString().charAt(0));
+        return super.charTyped(input);
+    }
+
+    @Override
+    public boolean keyPressed(KeyInput input) {
+        onKeyPressed(input.key(), input.modifiers());
+        return super.keyPressed(input);
+    }
 }

@@ -3,6 +3,7 @@ package net.velli.scelli.widget.widgets;
 import net.minecraft.client.gui.DrawContext;
 import net.velli.scelli.ScelliUtil;
 import net.velli.scelli.widget.interfaces.ClickableWidget;
+import net.velli.scelli.widget.widgets.containers.VerticalListWidget;
 
 public class ScrollBarWidget extends Widget<ScrollBarWidget> implements ClickableWidget {
 
@@ -20,19 +21,29 @@ public class ScrollBarWidget extends Widget<ScrollBarWidget> implements Clickabl
 
     @Override
     public void renderMain(DrawContext context, int mouseX, int mouseY, float delta) {
+        if (!(parent instanceof VerticalListWidget vlw)) return;
         if (rotated) context.getMatrices().rotate(1.570796f);
+
         if (scrollAmount != targetScrollAmount) {
             subpixelScrollAmount = ScelliUtil.lerp(subpixelScrollAmount, targetScrollAmount, 16f * delta);
             scrollAmount = Math.round(subpixelScrollAmount);
         }
-        context.fill(0, 0, width(), height(), 0x66000000);
         barHeight = Math.round(height() * scaleFactor);
-        if (held) setScrollAmount(scrollAnchor + Math.round((mouseY - mouseAnchor) / scaleFactor));
+        if (held) {
+            if (vlw.reversed) {
+                setScrollAmount(scrollAnchor - Math.round((mouseY - mouseAnchor) / scaleFactor));
+            } else {
+                setScrollAmount(scrollAnchor + Math.round((mouseY - mouseAnchor) / scaleFactor));
+            }
+        }
+        context.fill(0, 0, width(), height(), 0x66000000);
+        int visScrollAmount = scrollAmount;
+        if (vlw.reversed) visScrollAmount = maxScrollAmount - scrollAmount;
         context.fill(
                 0,
-                (int) (scrollAmount * scaleFactor),
+                (int) (visScrollAmount * scaleFactor),
                 width(),
-                barHeight + (int) (scrollAmount * scaleFactor),
+                barHeight + (int) (visScrollAmount * scaleFactor),
                 0xFFFFFFFF
         );
     }
@@ -53,6 +64,10 @@ public class ScrollBarWidget extends Widget<ScrollBarWidget> implements Clickabl
 
     public void setMaxScrollAmount(int amount) {
         maxScrollAmount = amount;
+    }
+
+    public int getMaxScrollAmount() {
+        return maxScrollAmount;
     }
 
     public int scrollAmount() {

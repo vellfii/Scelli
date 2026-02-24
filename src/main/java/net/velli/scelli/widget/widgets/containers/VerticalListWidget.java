@@ -23,6 +23,12 @@ public class VerticalListWidget extends ContainerWidget<VerticalListWidget> {
 
     private final ScrollBarWidget scrollBar = Widgets.create(ScrollBarWidget::new, 0, 0, 0, 0);
 
+    public boolean reversed = false;
+
+    public VerticalListWidget() {
+        scrollBar.parent = getWidget();
+    }
+
     @Override
     public void hover(int mouseX, int mouseY, boolean active) {
         super.hover(mouseX, mouseY, active);
@@ -64,7 +70,7 @@ public class VerticalListWidget extends ContainerWidget<VerticalListWidget> {
             for (Widget<?> widget : column) {
                 int offsetX = (columnWidth - widget.width()) / 2;
                 offsetX = Math.max(0, offsetX + (width() - columnsWidth) / 2);
-                widget.withPosition(currentX + offsetX, currentY - scrollBar.scrollAmount(), true);
+                widget.withPosition(currentX + offsetX, currentY - (reversed ? scrollBar.getMaxScrollAmount() - scrollBar.scrollAmount() : scrollBar.scrollAmount()), true);
                 currentY += widget.height() + itemPadding;
             }
 
@@ -76,6 +82,10 @@ public class VerticalListWidget extends ContainerWidget<VerticalListWidget> {
     @Override
     public VerticalListWidget getWidget() {
         return this;
+    }
+
+    public void setScrollAmount(int amount) {
+        scrollBar.setScrollAmount(amount);
     }
 
     @Override
@@ -113,9 +123,15 @@ public class VerticalListWidget extends ContainerWidget<VerticalListWidget> {
         return getWidget();
     }
 
+    public VerticalListWidget reversed() {
+        reversed = !reversed;
+        return getWidget();
+    }
+
     @Override
     public void onScroll(int amount) {
         super.onScroll(amount);
+        if (reversed) amount = -amount;
         scrollBar.setScrollAmount(scrollBar.scrollAmount() - amount * 25);
     }
 

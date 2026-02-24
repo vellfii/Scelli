@@ -1,6 +1,7 @@
 package net.velli.scelli.widget.interfaces;
 
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.input.KeyInput;
 import net.velli.scelli.widget.widgets.Alignment;
 import net.velli.scelli.widget.widgets.Widget;
 import net.velli.scelli.widget.widgets.WidgetPos;
@@ -9,7 +10,7 @@ import org.joml.Vector2i;
 
 import java.util.List;
 
-public interface WidgetContainer<T extends WidgetContainer<T>> extends ClickableWidget, ScrollableWidget {
+public interface WidgetContainer<T extends WidgetContainer<T>> extends ClickableWidget, ScrollableWidget, TypableWidget {
     int x();
     int y();
     int width();
@@ -89,6 +90,24 @@ public interface WidgetContainer<T extends WidgetContainer<T>> extends Clickable
     default void scrollChildren(int amount) {
         for (Widget<?> widget : getWidgets()) {
             if (widget instanceof ScrollableWidget sw) sw.onScroll(amount);
+        }
+    }
+
+    default void onType(char chr) { typeChildren(chr); }
+
+    default void typeChildren(char chr) {
+        for (Widget<?> widget : getWidgets()) {
+            if (widget instanceof TypableWidget sw) sw.onType(chr);
+        }
+    }
+
+    default void onKeyPressed(int keyCode, int modifiers) {
+        keyPressChildren(keyCode, modifiers);
+    }
+
+    default void keyPressChildren(int keyCode, int modifiers) {
+        for (Widget<?> widget : getWidgets()) {
+            if (widget instanceof TypableWidget sw) sw.onKeyPressed(keyCode, modifiers);
         }
     }
 }
