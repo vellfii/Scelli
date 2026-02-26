@@ -85,7 +85,8 @@ public class VerticalListWidget extends ContainerWidget<VerticalListWidget> {
     }
 
     public void setScrollAmount(int amount) {
-        scrollBar.setScrollAmount(amount);
+        if (amount == 0) scrollBar.resetScrollAmount();
+        else scrollBar.setScrollAmount(amount);
     }
 
     @Override

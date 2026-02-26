@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class TextDisplayWidget extends Widget<TextDisplayWidget> {
-    private List<OrderedText> lines = new ArrayList<>();
-    private Alignment alignment = Alignment.LEFT;
+    public List<OrderedText> lines = new ArrayList<>();
+    public Alignment alignment = Alignment.LEFT;
 
     @Override
     public void renderMain(DrawContext context, int mouseX, int mouseY, float delta) {

@@ -62,6 +62,12 @@ public class ScrollBarWidget extends Widget<ScrollBarWidget> implements Clickabl
         targetScrollAmount = amount;
     }
 
+    public void resetScrollAmount() {
+        scrollAmount = 0;
+        targetScrollAmount = 0;
+        subpixelScrollAmount = 0f;
+    }
+
     public void setMaxScrollAmount(int amount) {
         maxScrollAmount = amount;
     }
